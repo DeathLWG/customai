@@ -1,0 +1,152 @@
+let time = scope.getCurrentGameTimeInSec();
+let gold = scope.getGold();
+let me = scope.getMyPlayerNumber();
+
+var revionTD = scope.getBuildings({type: "zSendUnitsBuilding", player:me});
+var HnC = scope.getBuildings({type: "Heroic Center", player:me});
+
+if(revionTD.length > 0){
+    var startingtower = scope.getBuildings({type: "zStartingTower", player:me});
+    var supporttower = scope.getBuildings({type: "zSupportTower", player: me});
+    var archertower = scope.getBuildings({type: "zArcherTower", player:me});
+    var archertowerb = scope.getBuildings({type: "zArcherTowerB", player:me});
+    var archertowerc = scope.getBuildings({type: "zArcherTowerC", player:me});
+    var archertowerd = scope.getBuildings({type: "zArcherTowerD", player:me});
+    var specialiseInEnraged = scope.getBuildings({type: "zArcherTowerEnraged", player:me});
+    var specialiseInBallistae = scope.getBuildings({type: "zArcherTowerBallistae", player:me});
+    var magetower = scope.getBuildings({type: "zMageTower", player:me});
+    var magetowerb = scope.getBuildings({type: "zMageTowerB", player:me});
+    var magetowerc = scope.getBuildings({type: "zMageTowerC", player:me});
+    var magetowerd = scope.getBuildings({type: "zMageTowerD", player:me});
+    var specialiseInFire = scope.getBuildings({type: "zMageTowerFire", player:me});
+    var specialiseInIce = scope.getBuildings({type: "zMageTowerIce", player:me});
+    var specialiseInQuake = scope.getBuildings({type: "zCatapultTowerQauke", player:me});   
+    var specialiseInBomb = scope.getBuildings({type: "zCatapultTowerBomb", player:me});
+    var tier5 = specialiseInEnraged.concat(specialiseInBallistae.concat(specialiseInFire.concat(specialiseInIce.concat(specialiseInQuake.concat(specialiseInBomb)))));
+    var catatower = scope.getBuildings({type: "zCatapultTower", player:me});
+    var catatowerb = scope.getBuildings({type: "zCatapultTowerB", player:me});
+    var catatowerc = scope.getBuildings({type: "zCatapultTowerC", player:me});
+    var towerupgrades = scope.getBuildings({type: "zTowerUpgrades", player:me});
+    var lockedtowerspot = scope.getBuildings({type: "zLockedTowerSpot", player:me});
+
+    if(startingtower.length >= 7){
+        for(var i = 0; i < startingtower.length; i++){
+            scope.order("zUpgToArcherTower", [startingtower[i]]);
+        }
+    }else if(supporttower.length < 1){
+        for(var i = 0; i < startingtower.length; i++){
+            scope.order("zUpgToSupportTower", [startingtower[i]]);
+        }
+    }else{
+        var mageorcat = scope.getRandomNumber(1,2);
+        for(var i = 0; i < startingtower.length; i++){
+            if(mageorcat == 1){
+                if(magetower.concat(magetowerb.concat(magetowerc.concat(magetowerd))).length < 3){
+                    scope.order("zUpgToMageTower", [startingtower[i]]);
+                }
+            }else if(mageorcat == 2){
+                scope.order("zUpgToCatapultTower", [startingtower[i]]);
+            }
+        }
+    }
+    for(var i = 0; i < archertower.length; i++){
+        scope.order("zUpgToArcherTowerB", [archertower[i]]);
+    }
+    for(var i = 0; i < archertowerb.length; i++){
+        scope.order("zUpgToArcherTowerC", [archertowerb[i]]);
+    }
+    for(var i = 0; i < archertowerc.length; i++){
+        scope.order("zUpgToArcherTowerD", [archertowerc[i]]);
+    }
+    for(var i = 0; i < magetower.length; i++){
+        scope.order("zUpgToMageTowerB", [magetower[i]]);
+    }
+    for(var i = 0; i < magetowerb.length; i++){
+        scope.order("zUpgToMageTowerC", [magetowerb[i]]);
+    }
+    for(var i = 0; i < magetowerc.length; i++){
+        scope.order("zUpgToMageTowerD", [magetowerc[i]]);
+    }
+    for(var i = 0; i < catatower.length; i++){
+        scope.order("zUpgToCatapultTowerB", [catatower[i]]);
+    }
+    for(var i = 0; i < catatowerb.length; i++){
+        scope.order("zUpgToCatapultTowerC", [catatowerb[i]]);
+    }
+    for(var i = 0; i < archertowerd.length; i++){
+        scope.order("zSpecialiseInEnraged", [archertowerd[i]]);
+    }
+    for(var i = 0; i < magetowerd.length; i++){
+        scope.order("zSpecialiseInFire", [magetowerd[i]]);
+    }
+    if(specialiseInQuake.length <= 0){
+        for(var i = 0; i < catatowerc.length; i++){
+            scope.order("zSpecialiseInQuake", [catatowerc[i]]);
+        }
+    }else{
+        for(var i = 0; i < catatowerc.length; i++){
+            scope.order("zSpecialiseInBombs", [catatowerc[i]]);
+        }
+    }
+    for(var i = 0; i < towerupgrades.length; i++){
+        scope.order("zUpgArcherTowerRange", [towerupgrades[i]]);
+        scope.order("zUpgMageTowerCheaper", [towerupgrades[i]]);
+        scope.order("zUnlockTowerSpot", [towerupgrades[i]]);
+    }
+    for(var i = 0; i < lockedtowerspot.length; i++){
+        scope.order("zSpecialiseInBallistae", [lockedtowerspot[i]]);
+    }
+
+    
+    if(time > 10){
+        scope.order("zSendWorker", [revionTD[0]]);
+        scope.order("zSendWolf", [revionTD[0]]);
+        scope.order("zSendSoldier", [revionTD[0]]);
+        scope.order("zSendPriest", [revionTD[0]]);
+        scope.order("zSendWerewolf", [revionTD[0]]);
+        if(tier5.length > 2){
+            scope.order("zSendShadowWolf", [revionTD[0]]);
+            scope.order("zSendScorpling", [revionTD[0]]);
+            if(tier5.length > 5){
+                scope.order("zSendSkeleton", [revionTD[0]]);
+                scope.order("zSendRam", [revionTD[0]]);
+                scope.order("zSendDragon", [revionTD[0]]);
+            }
+        }
+    }
+}
+
+if(HnC.length > 0){
+    var selector = scope.getBuildings({type: "Select Character!", player:me});
+    var randomHnC = scope.getRandomNumber(1,3);
+    var norlonfortress = scope.getBuildings({type: "Norlon Fortress", player:me});
+    var Mines = scope.getBuildings({type: "Goldmine"});
+
+    var nearestDist = 99999;
+    var nearestMine = null;
+    
+    if(randomHnC == 1){
+        scope.order("Play as Norlon", [selector[0]]);
+    }
+    if(norlonfortress.length > 0){
+        var norlonworker = scope.getUnits({type: "Norlon Worker", player:me});
+        var inorlonworker = scope.getUnits({type: "Norlon Worker", player:me, order: "Stop"});
+        var nearestMine = null;
+        var neasrestDist = 99999;
+        for(var k = 0; k < Mines.length; k++){
+            for(var i = 0; i < inorlonworker.length; i++){
+                var Mine = Mines[k];
+                var dist = Math.pow(Mines[k].getX() - inorlonworker[i].getX(), 2) + Math.pow(Mines[k].getY() - inorlonworker[i].getY(), 2);
+                if(dist<neasrestDist){
+                    nearestMine = Mines[k];
+                    neasrestDist = dist;
+                }
+                scope.order("Mine", inorlonworker[i], {unit:nearestMine});
+            }
+        } 
+    }
+}
+
+
+
+
